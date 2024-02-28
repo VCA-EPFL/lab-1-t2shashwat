@@ -42,7 +42,7 @@ module mkVectorDot (VD);
                             address: zeroExtend(pos_a),
                             datain: ?});
 
-        if (pos_a < dim*zeroExtend(i))
+        if (pos_a < dim*zeroExtend(i) + dim - 1)//bug 2
             pos_a <= pos_a + 1;
         else done_a <= True;
 
@@ -56,7 +56,7 @@ module mkVectorDot (VD);
                 address: zeroExtend(pos_b),
                 datain: ?});
 
-        if (pos_b < dim*zeroExtend(i))
+        if (pos_b < dim*zeroExtend(i) + dim - 1)
             pos_b <= pos_b + 1;
         else done_b <= True;
     
@@ -67,11 +67,12 @@ module mkVectorDot (VD);
         let out_a <- a.portA.response.get();
         let out_b <- b.portA.response.get();
 
-        output_res <=  out_a*out_b;     
+        output_res <=  output_res + out_a*out_b;//bug 3: accumulation incorrect     
         pos_out <= pos_out + 1;
         
-        if (pos_out == dim-1) begin
+        if (pos_out == dim - 1) begin
             done_all <= True;
+            ready_start <= False; //bug 4: getting ready to accept another input
         end
 
 
@@ -85,12 +86,13 @@ module mkVectorDot (VD);
         ready_start <= True;
         dim <= dim_in;
         done_all <= False;
-        pos_a <= dim_in*zeroExtend(i);
-        pos_b <= dim_in*zeroExtend(i);
+        pos_a <= dim_in*zeroExtend(i_in);//bug-1
+        pos_b <= dim_in*zeroExtend(i_in);
         done_a <= False;
         done_b <= False;
         pos_out <= 0;
         i <= i_in;
+        output_res <= 0; //bug 5: output_res not reset to zero
     endmethod
 
     method ActionValue#(Bit#(32)) response() if (done_all);
