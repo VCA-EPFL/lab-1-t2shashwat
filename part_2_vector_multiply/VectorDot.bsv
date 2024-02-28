@@ -1,7 +1,7 @@
 import Vector::*;
 import BRAM::*;
 
-// Time spent on VectorDot: ____
+// Time spent on VectorDot: 30 mins
 
 // Please annotate the bugs you find.
 
