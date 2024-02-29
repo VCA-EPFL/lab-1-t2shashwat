@@ -2,12 +2,12 @@
 
 3.  Shifters
 
->> 16
+>> 256 16:1 muxes
 
->> 1
+>> 0
 
->>
+>> 1 16:1  
 
 ---
 
-Time spent on Part 1: _____
+Time spent on Part 1: 1 hour 15 mins
